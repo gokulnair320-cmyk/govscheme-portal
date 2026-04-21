@@ -4,7 +4,6 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 
-// Pages - dynamically imported or straight imported
 import Login from './pages/Login';
 import CitizenDashboard from './pages/CitizenDashboard';
 import SchemeList from './pages/SchemeList';
@@ -17,10 +16,32 @@ import AuditTrail from './pages/AuditTrail';
 
 const AppLayout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div style={{
+      minHeight: '100vh',
+      background: '#f8fafc',
+      display: 'flex',
+      fontFamily: 'Inter, sans-serif',
+    }}>
       <Navbar />
-      <div className="flex-1 ml-64 p-8">
-        <div className="max-w-6xl mx-auto">
+      <div style={{
+        flex: 1,
+        marginLeft: '260px',
+        padding: '2rem 3rem',
+        minHeight: '100vh',
+        background: '#f8fafc',
+        position: 'relative',
+      }}>
+        {/* Subtle accent line at the top */}
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: '260px',
+          right: 0,
+          height: '2px',
+          background: 'linear-gradient(90deg, #0f4c5c, #115e59, transparent)',
+          zIndex: 10,
+        }} />
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {children}
         </div>
       </div>
@@ -34,7 +55,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          
+
           {/* Citizen Routes */}
           <Route path="/dashboard" element={
             <ProtectedRoute allowedRoles={['citizen']}>

@@ -8,15 +8,10 @@ import {
   LogOut, 
   ShieldAlert, 
   Activity,
-  Users,
-  Database
+  Database,
+  Sparkles,
+  ChevronRight
 } from 'lucide-react';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-export function cn(...inputs) {
-  return twMerge(clsx(inputs));
-}
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -41,15 +36,87 @@ const Navbar = () => {
   const links = user.role === 'admin' ? adminLinks : citizenLinks;
 
   return (
-    <div className="flex flex-col w-64 bg-navy-900 text-white min-h-screen fixed left-0 top-0">
-      <div className="p-6">
-        <h1 className="text-2xl font-bold tracking-tight text-blue-50">GovScheme Portal</h1>
-        <p className="text-sm text-navy-300 mt-1 uppercase tracking-wider font-semibold">
-          {user.role === 'admin' ? 'Admin Panel' : 'Citizen Access'}
-        </p>
+    <div
+      style={{
+        width: '260px',
+        minHeight: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderRight: '1px solid rgba(0, 0, 0, 0.06)',
+        display: 'flex',
+        flexDirection: 'column',
+        zIndex: 50,
+      }}
+    >
+      {/* Logo */}
+      <div style={{ padding: '1.75rem 1.5rem 1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.25rem' }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #0f4c5c, #115e59)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            boxShadow: '0 4px 12px rgba(15, 76, 92, 0.2)',
+          }}>
+            <Sparkles size={16} color="white" />
+          </div>
+          <span style={{
+            fontSize: '1.1rem',
+            fontWeight: 800,
+            background: 'linear-gradient(135deg, #0f172a, #0f4c5c)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            letterSpacing: '-0.01em',
+          }}>
+            GovScheme
+          </span>
+        </div>
+        <div style={{
+          display: 'inline-block',
+          fontSize: '0.65rem',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          padding: '0.2rem 0.6rem',
+          borderRadius: '20px',
+          background: user.role === 'admin'
+            ? 'rgba(153, 27, 27, 0.1)'
+            : 'rgba(15, 76, 92, 0.1)',
+          color: user.role === 'admin' ? '#991b1b' : '#0f4c5c',
+          border: user.role === 'admin'
+            ? '1px solid rgba(153, 27, 27, 0.2)'
+            : '1px solid rgba(15, 76, 92, 0.2)',
+          marginLeft: '2.5rem',
+        }}>
+          {user.role === 'admin' ? 'Admin Panel' : 'Citizen Portal'}
+        </div>
       </div>
 
-      <nav className="flex-1 px-4 space-y-1">
+      {/* Divider */}
+      <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)', margin: '0 1.5rem' }} />
+
+      {/* Nav Links */}
+      <nav style={{ flex: 1, padding: '1rem 0.75rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+        <p style={{
+          fontSize: '0.65rem',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          color: '#94a3b8',
+          padding: '0 0.75rem',
+          marginBottom: '0.5rem',
+        }}>
+          Navigation
+        </p>
         {links.map((link) => {
           const Icon = link.icon;
           const isActive = location.pathname === link.path;
@@ -57,36 +124,134 @@ const Navbar = () => {
             <Link
               key={link.name}
               to={link.path}
-              className={cn(
-                "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors group",
-                isActive 
-                  ? "bg-navy-800 text-white" 
-                  : "text-navy-200 hover:bg-navy-800 hover:text-white"
-              )}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0.625rem 0.875rem',
+                borderRadius: '10px',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                textDecoration: 'none',
+                position: 'relative',
+                transition: 'all 0.2s ease',
+                background: isActive ? 'rgba(15, 76, 92, 0.08)' : 'transparent',
+                color: isActive ? '#0f4c5c' : '#64748b',
+                border: isActive ? '1px solid rgba(15, 76, 92, 0.1)' : '1px solid transparent',
+                overflow: 'hidden',
+              }}
+              onMouseEnter={e => {
+                if (!isActive) {
+                  e.currentTarget.style.background = '#f1f5f9';
+                  e.currentTarget.style.color = '#0f172a';
+                }
+              }}
+              onMouseLeave={e => {
+                if (!isActive) {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = '#64748b';
+                }
+              }}
             >
-              <Icon className={cn("mr-3 flex-shrink-0 h-5 w-5", isActive ? "text-blue-400" : "text-navy-400 group-hover:text-blue-400")} />
+              {isActive && (
+                <div style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '3px',
+                  height: '55%',
+                  background: 'linear-gradient(180deg, #0f4c5c, #115e59)',
+                  borderRadius: '0 3px 3px 0',
+                }} />
+              )}
+              <Icon
+                size={16}
+                style={{
+                  marginRight: '0.75rem',
+                  flexShrink: 0,
+                  color: isActive ? '#0f4c5c' : '#94a3b8',
+                }}
+              />
               {link.name}
+              {isActive && (
+                <ChevronRight size={14} style={{ marginLeft: 'auto', color: '#0f4c5c', opacity: 0.7 }} />
+              )}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-navy-800">
-        <div className="flex items-center px-4 py-3 mb-2">
-          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold mr-3">
+      {/* Divider */}
+      <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)', margin: '0 1.5rem' }} />
+
+      {/* User section */}
+      <div style={{ padding: '1rem 0.75rem 1.5rem' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0.75rem',
+          borderRadius: '12px',
+          background: 'rgba(0,0,0,0.02)',
+          border: '1px solid rgba(0,0,0,0.04)',
+          marginBottom: '0.5rem',
+        }}>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #0f4c5c, #115e59)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '0.875rem',
+            fontWeight: 700,
+            color: 'white',
+            flexShrink: 0,
+            boxShadow: '0 0 12px rgba(15, 76, 92, 0.2)',
+            marginRight: '0.75rem',
+          }}>
             {user.username.charAt(0).toUpperCase()}
           </div>
-          <div>
-            <p className="text-sm font-medium text-white">{user.username}</p>
-            <p className="text-xs text-navy-300 capitalize">{user.role}</p>
+          <div style={{ minWidth: 0 }}>
+            <p style={{ fontSize: '0.8rem', fontWeight: 600, color: '#1e293b', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {user.username}
+            </p>
+            <p style={{ fontSize: '0.7rem', color: '#64748b', margin: 0, textTransform: 'capitalize' }}>
+              {user.role}
+            </p>
           </div>
         </div>
+
         <button
           onClick={logout}
-          className="flex items-center w-full px-4 py-2 text-sm font-medium text-red-400 hover:bg-navy-800 hover:text-red-300 rounded-lg transition-colors"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            padding: '0.5rem 0.875rem',
+            borderRadius: '8px',
+            background: 'transparent',
+            border: '1px solid transparent',
+            color: '#64748b',
+            fontSize: '0.8rem',
+            fontWeight: 500,
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            fontFamily: 'Inter, sans-serif',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'rgba(239,68,68,0.05)';
+            e.currentTarget.style.color = '#991b1b';
+            e.currentTarget.style.borderColor = 'rgba(239,68,68,0.1)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.color = '#64748b';
+            e.currentTarget.style.borderColor = 'transparent';
+          }}
         >
-          <LogOut className="mr-3 h-5 w-5" />
-          Logout
+          <LogOut size={14} style={{ marginRight: '0.625rem' }} />
+          Sign Out
         </button>
       </div>
     </div>
