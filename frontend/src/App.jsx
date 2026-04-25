@@ -5,12 +5,15 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 
 import Login from './pages/Login';
+import Register from './pages/Register';
 import CitizenDashboard from './pages/CitizenDashboard';
 import SchemeList from './pages/SchemeList';
 import MyApplications from './pages/MyApplications';
 import MyDocuments from './pages/MyDocuments';
 import Notifications from './pages/Notifications';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminDocumentsQueue from './pages/AdminDocumentsQueue';
+import AdminNotifications from './pages/AdminNotifications';
 import FraudPanel from './pages/FraudPanel';
 import AuditTrail from './pages/AuditTrail';
 
@@ -55,6 +58,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           {/* Citizen Routes */}
           <Route path="/dashboard" element={
@@ -87,6 +91,16 @@ function App() {
           <Route path="/admin" element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AppLayout><AdminDashboard /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/documents" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AppLayout><AdminDocumentsQueue /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/notifications" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AppLayout><AdminNotifications /></AppLayout>
             </ProtectedRoute>
           } />
           <Route path="/admin/fraud" element={

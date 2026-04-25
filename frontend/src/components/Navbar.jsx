@@ -29,7 +29,9 @@ const Navbar = () => {
 
   const adminLinks = [
     { name: 'Admin Hub', path: '/admin', icon: Home },
+    { name: 'Document Queue', path: '/admin/documents', icon: Database },
     { name: 'Fraud Panel', path: '/admin/fraud', icon: ShieldAlert },
+    { name: 'Notifications', path: '/admin/notifications', icon: Bell },
     { name: 'Audit Trail', path: '/admin/audit', icon: Activity },
   ];
 
@@ -108,10 +110,10 @@ const Navbar = () => {
       <nav style={{ flex: 1, padding: '1rem 0.75rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
         <p style={{
           fontSize: '0.65rem',
-          fontWeight: 700,
+          fontWeight: 800,
           textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          color: '#94a3b8',
+          letterSpacing: '0.12em',
+          color: '#1e293b',
           padding: '0 0.75rem',
           marginBottom: '0.5rem',
         }}>
@@ -135,7 +137,7 @@ const Navbar = () => {
                 position: 'relative',
                 transition: 'all 0.2s ease',
                 background: isActive ? 'rgba(15, 76, 92, 0.08)' : 'transparent',
-                color: isActive ? '#0f4c5c' : '#64748b',
+                color: isActive ? '#0f172a' : '#475569',
                 border: isActive ? '1px solid rgba(15, 76, 92, 0.1)' : '1px solid transparent',
                 overflow: 'hidden',
               }}

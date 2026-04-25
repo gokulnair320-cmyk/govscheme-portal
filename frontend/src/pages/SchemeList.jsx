@@ -9,7 +9,13 @@ import {
   Zap, 
   Users, 
   Award,
-  BookOpen
+  BookOpen,
+  IndianRupee,
+  Building2,
+  CheckCircle2,
+  AlertCircle,
+  List,
+  FileCheck
 } from 'lucide-react';
 
 const SchemeList = () => {
@@ -19,6 +25,7 @@ const SchemeList = () => {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [applyingId, setApplyingId] = useState(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchSchemes = async () => {
@@ -36,17 +43,19 @@ const SchemeList = () => {
 
   const handleApply = async (schemeId) => {
     setApplyingId(schemeId);
+    setMessage(null);
     try {
       const res = await axios.post('http://localhost:5000/api/applications', {
         citizenId: user.citizenId,
         schemeId: schemeId
       });
-      alert(res.data.message || 'Application submitted successfully!');
+      setMessage({ type: 'success', text: res.data.message || 'Application submitted successfully!' });
     } catch (err) {
       console.error('Error applying:', err);
-      alert(err.response?.data?.message || 'Error submitting application');
+      setMessage({ type: 'error', text: err.response?.data?.message || 'Error submitting application' });
     } finally {
       setApplyingId(null);
+      setTimeout(() => setMessage(null), 5000);
     }
   };
 
@@ -80,6 +89,9 @@ const SchemeList = () => {
       <style>{`
         .scheme-card:hover { transform: translateY(-3px); border-color: rgba(99,102,241,0.2) !important; box-shadow: 0 12px 40px rgba(0,0,0,0.4) !important; }
         .scheme-card:hover .card-top-bar { opacity: 1 !important; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
 
       {/* Header */}
@@ -90,7 +102,7 @@ const SchemeList = () => {
         </div>
         <h1 style={{
           fontSize: '2rem', fontWeight: 800, margin: 0,
-          background: 'linear-gradient(135deg, #f1f5f9, #94a3b8)',
+          background: 'linear-gradient(135deg, #0f172a, #0f4c5c)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
         }}>Available Schemes</h1>
         <p style={{ color: '#475569', fontSize: '0.875rem', margin: '0.375rem 0 0' }}>
@@ -98,7 +110,7 @@ const SchemeList = () => {
         </p>
       </div>
 
-      {/* Toast Message */}
+      {/* Notification Toast */}
       {message && (
         <div style={{
           padding: '0.875rem 1.25rem',
@@ -167,7 +179,7 @@ const SchemeList = () => {
               }}>
                 <Zap size={18} color="#818cf8" />
               </div>
-              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#e2e8f0', margin: 0, lineHeight: 1.3 }}>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#1e293b', margin: 0, lineHeight: 1.3 }}>
                 {scheme.name}
               </h2>
             </div>
@@ -177,9 +189,11 @@ const SchemeList = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
                 {[
                   { icon: BookOpen, label: 'Age Range', value: `${scheme.age_lower} – ${scheme.age_upper} yrs` },
-                  { icon: IndianRupee, label: 'Income Limit', value: `₹${scheme.income?.toLocaleString()}` },
+                  { icon: IndianRupee, label: 'Income Limit', value: `₹${Number(scheme.income)?.toLocaleString()}` },
                   { icon: Users, label: 'Gender', value: scheme.gender },
                   { icon: Users, label: 'Caste Category', value: scheme.caste },
+                  { icon: IndianRupee, label: 'Benefit Amount', value: `₹${Number(scheme.benefit_amount)?.toLocaleString()}` },
+                  { icon: Building2, label: 'Department', value: scheme.department },
                 ].map(({ icon: Icon, label, value }) => (
                   <div key={label} style={{
                     padding: '0.75rem',
@@ -190,7 +204,7 @@ const SchemeList = () => {
                     <p style={{ fontSize: '0.68rem', color: '#475569', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 0.25rem' }}>
                       {label}
                     </p>
-                    <p style={{ fontSize: '0.875rem', color: '#cbd5e1', fontWeight: 600, margin: 0, textTransform: 'capitalize' }}>
+                    <p style={{ fontSize: '0.875rem', color: '#475569', fontWeight: 600, margin: 0, textTransform: 'capitalize' }}>
                       {value}
                     </p>
                   </div>
@@ -208,27 +222,27 @@ const SchemeList = () => {
               }}>
                 <FileCheck size={14} color="#818cf8" />
                 <span style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 500 }}>
-                  Required: <span style={{ color: '#a5b4fc', fontWeight: 600, textTransform: 'capitalize' }}>{scheme.required_document}</span>
+                  Required: <span style={{ color: '#a5b4fc', fontWeight: 600, textTransform: 'capitalize' }}>{scheme.required_document || 'General Document'}</span>
                 </span>
               </div>
 
               {/* Apply Button */}
               <button
                 onClick={() => handleApply(scheme.schemeId)}
-                disabled={applying === scheme.schemeId}
+                disabled={applyingId === scheme.schemeId}
                 className="apply-btn"
                 style={{
                   width: '100%',
                   padding: '0.75rem',
                   borderRadius: '10px',
-                  background: applying === scheme.schemeId
+                  background: applyingId === scheme.schemeId
                     ? 'rgba(99,102,241,0.3)'
                     : 'linear-gradient(135deg, #3b82f6, #6366f1)',
                   border: 'none',
                   color: 'white',
                   fontSize: '0.875rem',
                   fontWeight: 600,
-                  cursor: applying === scheme.schemeId ? 'not-allowed' : 'pointer',
+                  cursor: applyingId === scheme.schemeId ? 'not-allowed' : 'pointer',
                   fontFamily: 'Inter, sans-serif',
                   display: 'flex',
                   alignItems: 'center',
@@ -240,7 +254,7 @@ const SchemeList = () => {
                   overflow: 'hidden',
                 }}
               >
-                {applying === scheme.schemeId ? (
+                {applyingId === scheme.schemeId ? (
                   <>
                     <div style={{
                       width: '16px', height: '16px',

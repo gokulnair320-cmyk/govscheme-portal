@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Lock, User, Sparkles, ArrowRight, Shield, Globe } from 'lucide-react';
 
@@ -12,10 +12,12 @@ const Login = () => {
   const { login, user } = useAuth();
   const navigate = useNavigate();
 
-  if (user) {
-    if (user.role === 'admin') navigate('/admin');
-    else navigate('/dashboard');
-  }
+  useEffect(() => {
+    if (user && !isLoading) {
+      if (user.role === 'admin') navigate('/admin');
+      else navigate('/dashboard', { replace: true });
+    }
+  }, [user, navigate, isLoading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -197,6 +199,12 @@ const Login = () => {
               </button>
             </form>
 
+            <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+              <p style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                Don't have an account? <Link to="/register" style={{ color: '#0f4c5c', fontWeight: 600, textDecoration: 'none' }}>Register here</Link>
+              </p>
+            </div>
+
             {/* Test accounts */}
             <div style={{ marginTop: '2.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
@@ -211,12 +219,12 @@ const Login = () => {
                 <div style={{
                   padding: '0.75rem', borderRadius: '12px', background: '#f8fafc', border: '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.2s'
                 }}
-                  onClick={() => { setUsername('anmol101'); setPassword('pass101'); }}
+                  onClick={() => { setUsername('rahul.sharma'); setPassword('pass123'); }}
                   onMouseEnter={e => e.currentTarget.style.borderColor = '#0f4c5c'}
                   onMouseLeave={e => e.currentTarget.style.borderColor = '#e2e8f0'}
                 >
                   <p style={{ fontSize: '0.65rem', color: '#0f4c5c', fontWeight: 700, margin: '0 0 0.125rem' }}>CITIZEN</p>
-                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>anmol101</p>
+                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: 0 }}>rahul.sharma</p>
                 </div>
                 <div style={{
                   padding: '0.75rem', borderRadius: '12px', background: '#f8fafc', border: '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.2s'

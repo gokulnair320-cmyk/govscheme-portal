@@ -64,49 +64,49 @@ const Notifications = () => {
             <Bell size={18} color="#6366f1" />
             <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#6366f1', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Inbox</span>
           </div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, margin: 0, background: 'linear-gradient(135deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Notifications</h1>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, margin: 0, background: 'linear-gradient(135deg, #0f172a, #0f4c5c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Notifications</h1>
           <p style={{ color: '#475569', fontSize: '0.875rem', margin: '0.375rem 0 0' }}>Your latest alerts and application updates.</p>
         </div>
         {unreadCount > 0 && (
-          <div style={{ padding: '0.4rem 1rem', borderRadius: '20px', background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#a5b4fc', fontSize: '0.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ padding: '0.4rem 1rem', borderRadius: '20px', background: 'rgba(15, 76, 92, 0.1)', border: '1px solid rgba(15, 76, 92, 0.2)', color: '#0f4c5c', fontSize: '0.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <BellRing size={14} />{unreadCount} Unread
           </div>
         )}
       </div>
 
-      <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', opacity: 0, animation: 'slideUp 0.5s ease-out 0.15s forwards' }}>
+      <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid rgba(0, 0, 0, 0.05)', overflow: 'hidden', opacity: 0, animation: 'slideUp 0.5s ease-out 0.15s forwards', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
         {notifications.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', textAlign: 'center' }}>
-            <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(99,102,241,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
-              <BellOff size={28} color="#6366f1" />
+            <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'rgba(15, 76, 92, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+              <BellOff size={28} color="#0f4c5c" />
             </div>
-            <h3 style={{ color: '#64748b', fontSize: '1rem', fontWeight: 600, margin: '0 0 0.375rem' }}>No notifications</h3>
-            <p style={{ color: '#334155', fontSize: '0.85rem', margin: 0 }}>You're all caught up!</p>
+            <h3 style={{ color: '#1e293b', fontSize: '1rem', fontWeight: 600, margin: '0 0 0.375rem' }}>No notifications</h3>
+            <p style={{ color: '#64748b', fontSize: '0.85rem', margin: 0 }}>You're all caught up!</p>
           </div>
         ) : notifications.map((notif, idx) => {
           const isUnread = notif.status === 'Unread';
           return (
-            <div key={notif.notification_id} className="notif-item" style={{ padding: '1.25rem 1.5rem', borderBottom: idx < notifications.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none', background: isUnread ? 'rgba(99,102,241,0.05)' : 'transparent', display: 'flex', alignItems: 'flex-start', gap: '1rem', transition: 'background 0.2s ease', opacity: 0, animation: `slideUp 0.4s ease-out ${0.2 + idx * 0.05}s forwards` }}>
+            <div key={notif.notification_id} className="notif-item" style={{ padding: '1.25rem 1.5rem', borderBottom: idx < notifications.length - 1 ? '1px solid #f1f5f9' : 'none', background: isUnread ? 'rgba(15, 76, 92, 0.03)' : '#ffffff', display: 'flex', alignItems: 'flex-start', gap: '1rem', transition: 'background 0.2s ease', opacity: 0, animation: `slideUp 0.4s ease-out ${0.2 + idx * 0.05}s forwards` }}>
               <div style={{ paddingTop: '4px', flexShrink: 0 }}>
                 {isUnread
-                  ? <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#6366f1', animation: 'pulseDot 2s infinite' }} />
-                  : <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#1e293b' }} />}
+                  ? <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#0f4c5c', animation: 'pulseDot 2s infinite' }} />
+                  : <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#cbd5e1' }} />}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: '0.9rem', margin: '0 0 0.375rem', color: isUnread ? '#e2e8f0' : '#64748b', fontWeight: isUnread ? 500 : 400 }}>{notif.message}</p>
+                <p style={{ fontSize: '0.9rem', margin: '0 0 0.375rem', color: isUnread ? '#0f172a' : '#475569', fontWeight: isUnread ? 600 : 400 }}>{notif.message}</p>
                 {notif.notification_date && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                    <Clock size={12} color="#334155" />
-                    <span style={{ fontSize: '0.72rem', color: '#334155' }}>{format(new Date(notif.notification_date), 'MMM dd, yyyy · h:mm a')}</span>
+                    <Clock size={12} color="#64748b" />
+                    <span style={{ fontSize: '0.72rem', color: '#64748b' }}>{format(new Date(notif.notification_date), 'MMM dd, yyyy · h:mm a')}</span>
                   </div>
                 )}
               </div>
               {isUnread ? (
-                <button onClick={() => markAsRead(notif.notification_id)} className="mark-btn" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.875rem', borderRadius: '8px', background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', color: '#a5b4fc', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', flexShrink: 0, fontFamily: 'Inter, sans-serif', transition: 'all 0.2s' }}>
+                <button onClick={() => markAsRead(notif.notification_id)} className="mark-btn" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.875rem', borderRadius: '8px', background: 'rgba(15, 76, 92, 0.08)', border: '1px solid rgba(15, 76, 92, 0.1)', color: '#0f4c5c', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', flexShrink: 0, fontFamily: 'Inter, sans-serif', transition: 'all 0.2s' }}>
                   <Check size={13} />Mark read
                 </button>
               ) : (
-                <span style={{ fontSize: '0.68rem', color: '#1e293b', flexShrink: 0, alignSelf: 'center' }}>Read</span>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', flexShrink: 0, alignSelf: 'center', fontWeight: '500' }}>Read</span>
               )}
             </div>
           );

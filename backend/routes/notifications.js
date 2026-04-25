@@ -33,4 +33,30 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// POST /api/notifications - Create a new notification (Admin)
+router.post('/', async (req, res) => {
+  const { citizen_id, message } = req.body;
+  try {
+    if (citizen_id === 'ALL') {
+      // Get all citizens
+      const [citizens] = await db.query('SELECT citizenId FROM CITIZEN');
+      for (const citizen of citizens) {
+        await db.query(
+          "INSERT INTO NOTIFICATION (citizen_id, message, notification_date, status) VALUES (?, ?, NOW(), 'Unread')",
+          [citizen.citizenId, message]
+        );
+      }
+    } else {
+      await db.query(
+        "INSERT INTO NOTIFICATION (citizen_id, message, notification_date, status) VALUES (?, ?, NOW(), 'Unread')",
+        [citizen_id, message]
+      );
+    }
+    res.json({ success: true, message: 'Notification(s) sent successfully' });
+  } catch (err) {
+    console.error('Create notification error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;

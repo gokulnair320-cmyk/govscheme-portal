@@ -131,7 +131,6 @@ const AdminDashboard = () => {
   return (
     <div style={{ fontFamily: 'Inter, sans-serif', padding: '1rem' }}>
       <style>{`
-        @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
         .app-row:hover td { background: rgba(15, 76, 92, 0.02); }
       `}</style>
@@ -266,7 +265,7 @@ const AdminDashboard = () => {
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.08em',
-                    color: '#94a3b8',
+                    color: '#475569',
                     borderBottom: '1px solid #f1f5f9',
                     textAlign: i === 4 ? 'right' : 'left',
                   }}>{h}</th>

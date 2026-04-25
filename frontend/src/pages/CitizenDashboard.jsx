@@ -148,10 +148,6 @@ const CitizenDashboard = () => {
   return (
     <div style={{ fontFamily: 'Inter, sans-serif', padding: '1rem' }}>
       <style>{`
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes pulseDot {
           0%, 100% { box-shadow: 0 0 0 0 rgba(15, 76, 92, 0.4); }

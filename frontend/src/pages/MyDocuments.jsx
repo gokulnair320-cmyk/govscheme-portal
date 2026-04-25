@@ -4,15 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import { 
   Folder, 
   UploadCloud, 
-  File, 
   Trash2, 
   CheckCircle, 
   AlertCircle,
   FileText,
   FileImage,
-  Upload
+  Upload,
+  List
 } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 
 const MyDocuments = () => {
   const { user } = useAuth();
@@ -26,7 +26,7 @@ const MyDocuments = () => {
     const fetchDocuments = async () => {
       try {
         const res = await axios.get(`http://localhost:5000/api/documents/${user.citizenId}`);
-        setDocuments(res.data);
+        setDocuments(res.data || []);
       } catch (err) {
         console.error('Error fetching documents:', err);
       } finally {
@@ -50,8 +50,11 @@ const MyDocuments = () => {
       const res = await axios.post('http://localhost:5000/api/documents/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setDocuments([...documents, res.data.document]);
+      if (res.data && res.data.document) {
+        setDocuments(prev => [...prev, res.data.document]);
+      }
       setFile(null);
+      alert('Document uploaded successfully!');
     } catch (err) {
       console.error('Error uploading document:', err);
       alert('Upload failed. Please try again.');
@@ -61,6 +64,7 @@ const MyDocuments = () => {
   };
 
   const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this document?')) return;
     try {
       await axios.delete(`http://localhost:5000/api/documents/${id}`);
       setDocuments(documents.filter(d => d.document_id !== id));
@@ -69,42 +73,44 @@ const MyDocuments = () => {
     }
   };
 
-  const getDocIcon = (type) => {
-    if (type.includes('Image') || type.includes('Photo')) return <FileImage size={24} color="#0f4c5c" />;
+  const getDocIcon = (type = '') => {
+    const t = type.toLowerCase();
+    if (t.includes('image') || t.includes('photo') || t.includes('jpg') || t.includes('png')) {
+        return <FileImage size={24} color="#0f4c5c" />;
+    }
     return <FileText size={24} color="#0f4c5c" />;
+  };
+
+  const formatDate = (dateStr) => {
+    const d = new Date(dateStr);
+    return isValid(d) ? format(d, 'dd MMM yyyy') : 'Recently';
   };
 
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{
-            width: '40px', height: '40px', border: '3px solid rgba(15, 76, 92, 0.1)',
-            borderTopColor: '#0f4c5c', borderRadius: '50%',
-            animation: 'spin 0.8s linear infinite', margin: '0 auto 1rem',
-          }} />
-          <p style={{ color: '#64748b', fontSize: '0.875rem' }}>Loading documents...</p>
+          <div className="spinner" style={{ margin: '0 auto 1rem' }} />
+          <p style={{ color: '#64748b', fontSize: '0.875rem' }}>Loading vault...</p>
         </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
     <div style={{ fontFamily: 'Inter, sans-serif', padding: '1rem' }}>
-      <style>{`
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .doc-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); border-color: rgba(15, 76, 92, 0.1); }
-      `}</style>
-
       {/* Header */}
       <div style={{ marginBottom: '2.5rem', opacity: 0, animation: 'slideUp 0.5s ease-out forwards' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
           <Folder size={18} color="#0f4c5c" />
-          <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#0f4c5c', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Document Vault</span>
+          <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#0f4c5c', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Security</span>
         </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#0f172a', margin: 0, letterSpacing: '-0.02em' }}>My Documents</h1>
-        <p style={{ color: '#64748b', fontSize: '1rem', marginTop: '0.5rem' }}>Securely manage your uploaded certificates and proofs.</p>
+        <h1 style={{ 
+            fontSize: '2.25rem', fontWeight: 800, margin: 0, letterSpacing: '-0.02em',
+            background: 'linear-gradient(135deg, #0f172a, #0f4c5c)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+        }}>Document Vault</h1>
+        <p style={{ color: '#475569', fontSize: '1rem', marginTop: '0.5rem' }}>Securely manage your uploaded certificates and proofs.</p>
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
@@ -119,8 +125,8 @@ const MyDocuments = () => {
           animation: 'slideUp 0.5s ease-out 0.1s forwards',
           boxShadow: '0 4px 20px rgba(0,0,0,0.02)'
         }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', margin: '0 0 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <UploadCloud size={20} color="#0f4c5c" /> Upload New Document
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b', margin: '0 0 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <UploadCloud size={20} color="#0f4c5c" /> Upload New
           </h2>
           
           <form onSubmit={handleUpload}>
@@ -159,12 +165,12 @@ const MyDocuments = () => {
                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
                   required
                 />
-                <Upload size={32} color={file ? '#059669' : '#94a3b8'} style={{ margin: '0 auto 1rem' }} />
-                <p style={{ fontSize: '0.95rem', fontWeight: 600, color: file ? '#059669' : '#475569', margin: '0 0 0.25rem' }}>
-                  {file ? file.name : 'Click or drag file to upload'}
+                <Upload size={32} color={file ? '#10b981' : '#94a3b8'} style={{ margin: '0 auto 1rem' }} />
+                <p style={{ fontSize: '0.9rem', fontWeight: 600, color: file ? '#047857' : '#475569', margin: '0 0 0.25rem' }}>
+                  {file ? file.name : 'Click to select file'}
                 </p>
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: 0 }}>
-                  {file ? `${(file.size / 1024).toFixed(2)} KB` : 'PDF, JPG, PNG up to 5MB'}
+                <p style={{ fontSize: '0.7rem', color: '#94a3b8', margin: 0 }}>
+                  PDF, JPG, PNG up to 5MB
                 </p>
               </div>
             </div>
@@ -174,25 +180,25 @@ const MyDocuments = () => {
               disabled={uploading || !file}
               className="btn-gradient"
               style={{
-                width: '100%', padding: '0.875rem', borderRadius: '12px', fontSize: '0.9rem',
+                width: '100%', padding: '0.875rem', borderRadius: '12px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.625rem'
               }}
             >
-              {uploading ? 'Uploading...' : 'Upload Document'}
+              {uploading ? 'Uploading...' : 'Verify & Upload'}
             </button>
           </form>
         </div>
 
         {/* Document List Section */}
         <div style={{ flex: '2 1 400px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', margin: '0 0 1.5rem', opacity: 0, animation: 'slideUp 0.5s ease-out 0.2s forwards' }}>
-            Uploaded Files ({documents.length})
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b', margin: '0 0 1.5rem', opacity: 0, animation: 'slideUp 0.5s ease-out 0.2s forwards' }}>
+            My Records ({documents.length})
           </h2>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
             {documents.map((doc, idx) => (
               <div
-                key={doc.document_id}
+                key={doc.document_id || idx}
                 className="doc-card"
                 style={{
                   background: '#ffffff',
@@ -205,6 +211,7 @@ const MyDocuments = () => {
                   opacity: 0,
                   animation: `slideUp 0.5s ease-out ${0.2 + idx * 0.05}s forwards`,
                   transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
                 }}
               >
                 <div style={{
@@ -215,14 +222,18 @@ const MyDocuments = () => {
                 </div>
                 
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', margin: '0 0 0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e293b', margin: '0 0 0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {doc.document_type}
                   </h3>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', fontSize: '0.75rem' }}>
-                    <span>{format(new Date(doc.upload_date), 'dd MMM yyyy')}</span>
-                    <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#cbd5e1' }} />
-                    <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 600 }}>
-                      <CheckCircle size={10} /> Verified
+                    <span style={{ 
+                        color: doc.verification_status === 'Pending' ? '#854d0e' : (doc.verification_status === 'Verified' ? '#059669' : '#b91c1c'),
+                        display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 
+                    }}>
+                      {doc.verification_status === 'Pending' && <AlertCircle size={10} />}
+                      {doc.verification_status === 'Verified' && <CheckCircle size={10} />}
+                      {doc.verification_status === 'Rejected' && <Trash2 size={10} />}
+                      {doc.verification_status}
                     </span>
                   </div>
                 </div>
@@ -233,8 +244,6 @@ const MyDocuments = () => {
                     width: '32px', height: '32px', borderRadius: '8px', background: '#f8fafc', border: '1px solid #e2e8f0',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', cursor: 'pointer', transition: 'all 0.2s', flexShrink: 0
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.borderColor = '#fecaca'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
                   title="Delete Document"
                 >
                   <Trash2 size={14} />
@@ -251,9 +260,9 @@ const MyDocuments = () => {
               <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
                  <AlertCircle size={32} color="#cbd5e1" />
               </div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#1e293b', marginBottom: '0.5rem' }}>No Documents</h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem', maxWidth: '280px', margin: '0 auto' }}>
-                You haven't uploaded any documents yet. Please upload required proofs to apply for schemes.
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#1e293b', marginBottom: '0.5rem' }}>Vault Empty</h3>
+              <p style={{ color: '#64748b', fontSize: '0.9rem', maxWidth: '280px', margin: '0 auto' }}>
+                You haven't uploaded any documents yet.
               </p>
             </div>
           )}

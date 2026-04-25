@@ -101,7 +101,7 @@
 
   /* === GRADIENT TEXT === */
   .gradient-text {
-    background: linear-gradient(135deg, #0f4c5c 0%, #115e59 50%, #0d9488 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #0f4c5c 50%, #115e59 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -470,5 +470,21 @@
   /* === OPACITY INIT (for staggered animations) === */
   .opacity-0-init {
     opacity: 0;
+  }
+
+  /* === UNIVERSAL KEYFRAMES === */
+  @keyframes slideUp { 
+    from { opacity: 0; transform: translateY(20px); } 
+    to { opacity: 1; transform: translateY(0); } 
+  }
+  
+  @keyframes slideInDown { 
+    from { opacity: 0; transform: translateY(-10px); } 
+    to { opacity: 1; transform: translateY(0); } 
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }

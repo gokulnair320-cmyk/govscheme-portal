@@ -2,6 +2,49 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
+// POST /api/auth/register
+router.post('/register', async (req, res) => {
+  const { name, age, gender, address, income, caste, education, username, password } = req.body;
+  try {
+    // Check if username already exists
+    const [existing] = await db.query('SELECT * FROM LOGIN_CREDENTIALS WHERE username = ?', [username]);
+    if (existing.length > 0) {
+      return res.status(400).json({ success: false, message: 'Username already exists' });
+    }
+
+    // Insert Citizen
+    const [citRes] = await db.query(
+      'INSERT INTO CITIZEN (name, age, gender, address, income, caste, education) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [name, parseInt(age), gender, address, parseFloat(income), caste, education]
+    );
+    const citizenId = citRes.insertId;
+
+    // Insert Login Credentials
+    const [logRes] = await db.query(
+      'INSERT INTO LOGIN_CREDENTIALS (citizen_id, username, password, last_login) VALUES (?, ?, ?, NOW())',
+      [citizenId, username, password]
+    );
+    const loginId = logRes.insertId;
+
+    // Log the registration
+    await db.query(
+      'INSERT INTO AUDIT_LOG (citizen_id, action, action_date) VALUES (?, ?, NOW())',
+      [citizenId, 'Register Application']
+    );
+
+    // Auto login
+    req.session.citizenId = citizenId;
+    req.session.role = 'citizen';
+    req.session.username = username;
+    req.session.loginId = loginId;
+
+    res.json({ success: true, role: 'citizen', citizenId });
+  } catch (err) {
+    console.error('Registration error:', err);
+    res.status(500).json({ success: false, message: 'Server error during registration' });
+  }
+});
+
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
