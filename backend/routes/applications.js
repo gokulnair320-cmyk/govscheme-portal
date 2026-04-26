@@ -145,4 +145,20 @@ router.put('/:id/status', async (req, res) => {
   }
 });
 
+// GET /api/applications/stats - get aggregate metrics (Aggregate/Arithmetic Demo)
+router.get('/stats', async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT COUNT(*) AS total_applications, SUM(s.benefit_amount) AS total_budget_needed 
+       FROM APPLICATION a 
+       JOIN SCHEME s ON a.schemeId = s.schemeId 
+       WHERE a.status = 'Approved'`
+    );
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('Get aggregate stats error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;

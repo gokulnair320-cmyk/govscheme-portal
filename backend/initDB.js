@@ -81,7 +81,15 @@ const schemas = [
     notification_date DATETIME,
     status VARCHAR(20) NOT NULL,
     FOREIGN KEY (citizen_id) REFERENCES CITIZEN(citizenId)
-);`
+);`,
+
+`CREATE OR REPLACE VIEW vw_adult_citizens AS 
+SELECT * FROM CITIZEN WHERE age >= 18;`,
+
+`CREATE TRIGGER after_citizen_insert 
+AFTER INSERT ON CITIZEN 
+FOR EACH ROW 
+INSERT INTO AUDIT_LOG (citizen_id, action, action_date) VALUES (NEW.citizenId, 'Registration Auto-Log Trigger', NOW());`
 ];
 
 const data = [

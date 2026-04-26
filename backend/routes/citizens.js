@@ -20,7 +20,7 @@ router.get('/:id', async (req, res) => {
 // GET /api/citizens - get all citizens (admin)
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM CITIZEN');
+    const [rows] = await db.query('SELECT * FROM vw_adult_citizens');
     res.json(rows);
   } catch (err) {
     console.error('Get all citizens error:', err);
