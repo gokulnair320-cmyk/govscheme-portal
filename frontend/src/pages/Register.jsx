@@ -39,7 +39,7 @@ const Register = () => {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', formData);
+      const res = await axios.post('/api/auth/register', formData);
       if (res.data && res.data.success) {
         // Log them in immediately
         await login(formData.username, formData.password);

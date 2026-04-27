@@ -30,7 +30,7 @@ const SchemeList = () => {
   useEffect(() => {
     const fetchSchemes = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/schemes');
+        const res = await axios.get('/api/schemes');
         setSchemes(res.data);
       } catch (err) {
         console.error('Error fetching schemes:', err);
@@ -45,7 +45,7 @@ const SchemeList = () => {
     setApplyingId(schemeId);
     setMessage(null);
     try {
-      const res = await axios.post('http://localhost:5000/api/applications', {
+      const res = await axios.post('/api/applications', {
         citizenId: user.citizenId,
         schemeId: schemeId
       });

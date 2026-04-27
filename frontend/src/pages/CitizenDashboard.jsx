@@ -100,9 +100,9 @@ const CitizenDashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const [citizenRes, appsRes, notifsRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/citizens/${user.citizenId}`),
-          axios.get(`http://localhost:5000/api/applications/${user.citizenId}`),
-          axios.get(`http://localhost:5000/api/notifications/${user.citizenId}`),
+          axios.get(`/api/citizens/${user.citizenId}`),
+          axios.get(`/api/applications/${user.citizenId}`),
+          axios.get(`/api/notifications/${user.citizenId}`),
         ]);
         setCitizen(citizenRes.data);
         setApplications(appsRes.data);

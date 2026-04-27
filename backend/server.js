@@ -56,6 +56,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'GovScheme Portal API running' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

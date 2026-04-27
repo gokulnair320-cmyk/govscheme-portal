@@ -83,9 +83,9 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const [appRes, citRes, fraudRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/applications'),
-          axios.get('http://localhost:5000/api/citizens'),
-          axios.get('http://localhost:5000/api/fraud'),
+          axios.get('/api/applications'),
+          axios.get('/api/citizens'),
+          axios.get('/api/fraud'),
         ]);
         setApplications(appRes.data);
         setCitizensConfig(citRes.data);
@@ -101,7 +101,7 @@ const AdminDashboard = () => {
 
   const handleUpdateStatus = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5000/api/applications/${id}/status`, { status });
+      await axios.put(`/api/applications/${id}/status`, { status });
       setApplications(applications.map(app => app.appId === id ? { ...app, status } : app));
     } catch (err) {
       console.error('Error updating status:', err);

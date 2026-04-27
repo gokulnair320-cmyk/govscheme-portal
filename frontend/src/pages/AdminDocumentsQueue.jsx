@@ -12,7 +12,7 @@ const AdminDocumentsQueue = () => {
 
   const fetchDocuments = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/documents/all');
+      const res = await axios.get('/api/documents/all');
       setDocuments(res.data || []);
     } catch (err) {
       console.error('Error fetching documents:', err);
@@ -23,7 +23,7 @@ const AdminDocumentsQueue = () => {
 
   const handleVerify = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5000/api/documents/${id}/verify`, { status });
+      await axios.put(`/api/documents/${id}/verify`, { status });
       // Update local state
       setDocuments(docs => docs.map(d => d.document_id === id ? { ...d, verification_status: status } : d));
     } catch (err) {

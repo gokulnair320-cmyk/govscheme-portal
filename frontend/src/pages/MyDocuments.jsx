@@ -25,7 +25,7 @@ const MyDocuments = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/documents/${user.citizenId}`);
+        const res = await axios.get(`/api/documents/${user.citizenId}`);
         setDocuments(res.data || []);
       } catch (err) {
         console.error('Error fetching documents:', err);
@@ -47,7 +47,7 @@ const MyDocuments = () => {
     formData.append('documentType', docType);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/documents/upload', formData, {
+      const res = await axios.post('/api/documents/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       if (res.data && res.data.document) {
@@ -66,7 +66,7 @@ const MyDocuments = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this document?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/documents/${id}`);
+      await axios.delete(`/api/documents/${id}`);
       setDocuments(documents.filter(d => d.document_id !== id));
     } catch (err) {
       console.error('Error deleting document:', err);

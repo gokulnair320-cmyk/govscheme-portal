@@ -14,7 +14,7 @@ const AdminNotifications = () => {
     setSuccessMsg('');
     setErrorMsg('');
     try {
-      await axios.post('http://localhost:5000/api/notifications', formData);
+      await axios.post('/api/notifications', formData);
       setSuccessMsg('Notification successfully dispatched.');
       setFormData({ citizen_id: '', message: '' });
     } catch (err) {

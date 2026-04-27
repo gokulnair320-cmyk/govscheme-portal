@@ -23,7 +23,7 @@ const MyApplications = () => {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/applications/${user.citizenId}`);
+        const res = await axios.get(`/api/applications/${user.citizenId}`);
         setApplications(res.data);
       } catch (err) {
         console.error('Error fetching applications:', err);

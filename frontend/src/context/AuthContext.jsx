@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/auth/me');
+        const res = await axios.get('/api/auth/me');
         if (res.data.loggedIn) {
           setUser({
             role: res.data.role,
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    const res = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+    const res = await axios.post('/api/auth/login', { username, password });
     if (res.data.success) {
       setUser({
         role: res.data.role,
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.post('http://localhost:5000/api/auth/logout');
+    await axios.post('/api/auth/logout');
     setUser(null);
   };
 
